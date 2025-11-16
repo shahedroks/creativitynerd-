@@ -1,0 +1,20 @@
+import 'package:flutter/material.dart';
+
+class AddScreen extends StatefulWidget {
+  const AddScreen({super.key});
+  static const String routeName = '/addScreen';
+
+  @override
+  State<AddScreen> createState() => _AddScreenState();
+}
+
+class _AddScreenState extends State<AddScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text("Add"),
+      ),
+    );
+  }
+}
