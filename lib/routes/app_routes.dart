@@ -6,8 +6,10 @@ import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
 import 'package:pdf_scanner/features/settings/seceen/settings_screen.dart';
 import 'package:pdf_scanner/features/splash/screen/splash_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
+import 'package:pdf_scanner/features/tools/widget/premiumDialog.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
 
+import '../features/camerascanner/screen/camera_screen.dart';
 import '../features/files/widget/personal_document.dart';
 import '../features/navbar/screen/navbar.dart';
 
@@ -64,6 +66,13 @@ class AppRouter {
         name: ToolsScreen.routeName,
         builder: (context, state) => const ToolsScreen(),
       ),
+
+      GoRoute(
+        path: CameraScreen.routeName,
+        name: CameraScreen.routeName,
+        builder: (context, state) => const CameraScreen(),
+       ),
+
 
       GoRoute(
         path: SettingsScreen.routeName,

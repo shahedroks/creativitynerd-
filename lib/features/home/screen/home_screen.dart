@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/camera_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -641,7 +642,9 @@ void showAddSheet(BuildContext context) {
               child: _ActionTile(
                 svg: 'assets/images/camera.svg',
                 label: 'Scan\nDocument',
-                onTap: () {},
+                onTap: () {
+                  context.push(CameraScreen.routeName);
+                },
               ),
             ),
           ],
