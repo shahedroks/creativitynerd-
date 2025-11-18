@@ -36,7 +36,7 @@ class UpgradePlanCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.r),
             gradient: const LinearGradient(
-              colors: [Color(0xFF4A6CFF), Color(0xFF7C3AED)],
+              colors: [Color(0xFF7C3AED), Color(0xFF4A6CFF) ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),

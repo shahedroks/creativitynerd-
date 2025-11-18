@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/features/add/screen/add_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
 import 'package:pdf_scanner/features/settings/seceen/settings_screen.dart';
 import 'package:pdf_scanner/features/splash/screen/splash_screen.dart';
 import 'package:pdf_scanner/features/tools/screen/tools_screen.dart';
-import 'package:pdf_scanner/features/tools/widget/premiumDialog.dart';
 import 'package:pdf_scanner/routes/custom_error_screen.dart';
 
 import '../features/camerascanner/screen/camera_screen.dart';
@@ -72,6 +72,13 @@ class AppRouter {
         name: CameraScreen.routeName,
         builder: (context, state) => const CameraScreen(),
        ),
+
+      GoRoute(
+        path: EditFilterScreen.routeName,
+        name: EditFilterScreen.routeName,
+        builder: (context, state) => const EditFilterScreen(),
+      ),
+
 
 
       GoRoute(

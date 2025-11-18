@@ -12,6 +12,7 @@ class ToolItem {
   final Color cardColor;
   final Color iconBg;
   final VoidCallback onTap;
+  final bool isPremium;            // 🔹 শুধু Unlock PDF এর জন্য true
 
   ToolItem({
     required this.title,
@@ -19,6 +20,7 @@ class ToolItem {
     required this.cardColor,
     required this.iconBg,
     required this.onTap,
+    this.isPremium = false,        // ডিফল্ট false
   });
 }
 
@@ -26,10 +28,8 @@ class ToolsScreen extends StatelessWidget {
   const ToolsScreen({Key? key}) : super(key: key);
   static const String routeName = '/toolsScreen';
 
-
   @override
   Widget build(BuildContext context) {
-
     final tools = <ToolItem>[
       ToolItem(
         title: 'Merge PDF',
@@ -64,7 +64,10 @@ class ToolsScreen extends StatelessWidget {
         svgAsset: 'assets/images/unlock.svg',
         cardColor: const Color(0xFFE7ECF6),
         iconBg: const Color(0xFF6173AA),
-        onTap: () {},
+        isPremium: true,
+        onTap: () {
+
+        },
       ),
       ToolItem(
         title: 'Extract Text',
@@ -118,7 +121,6 @@ class ToolsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title
               Text(
                 'Tools',
                 style: TextStyle(
@@ -128,13 +130,12 @@ class ToolsScreen extends StatelessWidget {
                   color: AllColor.black,
                 ),
               ),
-              UpgradePlanCard(
-               //   showPremiumBottomSheet(context);
-              ),
+
+             const UpgradePlanCard(),
+
               SizedBox(height: 20.h),
               SizedBox(height: 24.h),
 
-              // Grid of tools
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -158,8 +159,7 @@ class ToolsScreen extends StatelessWidget {
   }
 }
 
-
-/// Single tool card (custom reusable widget)
+/// Single tool card
 class ToolCard extends StatelessWidget {
   final ToolItem item;
 
@@ -179,28 +179,30 @@ class ToolCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: EdgeInsets.all(2.r),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.r),
+              // 🔹 শুধু premium হলে উপরে ডান পাশে icon
+              if (item.isPremium)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    padding: EdgeInsets.all(2.r),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/images/premium.svg", // premium.svg / pdf icon
+                      width: 18.w,
+                      height: 18.h,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: SvgPicture.asset(
-                    "assets/images/premium.svg",
-                    width: 20.w,
-                    height: 20.h,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-
+                )
+              else
+                SizedBox(height: 18.h), // height balance রাখার জন্য
 
               Container(
                 padding: EdgeInsets.all(8.r),
                 decoration: BoxDecoration(
-                   color:Colors.white ,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: SvgPicture.asset(
@@ -211,11 +213,11 @@ class ToolCard extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10.h),
-              // title
               Text(
                 item.title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontFamily: "sf_Pro",
@@ -230,3 +232,5 @@ class ToolCard extends StatelessWidget {
     );
   }
 }
+
+

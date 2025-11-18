@@ -40,9 +40,8 @@ class Premiumdialog extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Top gradient + gift image
                   Container(
-                    height: 140.h,
+                    height: 120.h, // চাইলে 120.h/150.h রাখতে পারো
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(24.r),
@@ -50,19 +49,25 @@ class Premiumdialog extends StatelessWidget {
                       ),
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFFFCB3FF),
+                          Color(0xFFFED4FF),
                           Color(0xFFB38CFF),
                         ],
-                        // begin: Alignment.topCenter,
-                        // end: Alignment.bottomCenter,
+                        // begin: Alignment.topLeft,
+                        // end: Alignment.bottomRight,
                       ),
                     ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        'assets/images/giftbox.svg',
-                        height: 200.h,
-                        width: 200.w,
-                        fit: BoxFit.contain,
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 10.h,
+                        ),
+                        child: Image.asset(
+                          'assets/images/box.png',
+                          height: 110.h,
+                          width: 110.w,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

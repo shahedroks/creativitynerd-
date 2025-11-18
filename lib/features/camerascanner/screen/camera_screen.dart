@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
@@ -36,98 +38,98 @@ class _CameraScreenState extends State<CameraScreen> {
 
   final _picker = ImagePicker();
 
-  @override
-  void initState() {
-    super.initState();
-    _initCamera();
-  }
-
-  Future<void> _initCamera() async {
-    try {
-      final cameras = await availableCameras();
-
-      final backCamera = cameras.firstWhere(
-            (c) => c.lensDirection == CameraLensDirection.back,
-        orElse: () => cameras.first,
-      );
-
-      _cameraController = CameraController(
-        backCamera,
-        ResolutionPreset.high,
-        enableAudio: false,
-      );
-
-      _initializeControllerFuture = _cameraController!.initialize();
-      await _initializeControllerFuture;
-
-      if (!mounted) return;
-
-      setState(() {
-        _isCameraReady = true;
-      });
-    } catch (e) {
-      debugPrint('Camera init error: $e');
-      if (!mounted) return;
-      setState(() {
-        _isCameraReady = false;
-      });
-    }
-  }
-
-  Future<void> _captureImage() async {
-    if (_cameraController == null ||
-        !_cameraController!.value.isInitialized ||
-        _cameraController!.value.isTakingPicture) {
-      return;
-    }
-
-    try {
-      await _initializeControllerFuture;
-      final file = await _cameraController!.takePicture();
-
-      setState(() {
-        if (_isMultiPage) {
-          _capturedFiles.add(file);
-        } else {
-          _capturedFiles
-            ..clear()
-            ..add(file);
-        }
-        _currentPageIndex = _capturedFiles.isEmpty
-            ? 0
-            : _capturedFiles.length - 1; // last page
-      });
-
-      debugPrint('Captured image path: ${file.path}');
-    } catch (e) {
-      debugPrint('Capture error: $e');
-    }
-  }
-
-  Future<void> _pickFromGallery() async {
-    try {
-      final picked = await _picker.pickMultiImage(); // multiple image
-      if (picked.isEmpty) return;
-
-      setState(() {
-        if (_isMultiPage) {
-          _capturedFiles.addAll(picked);
-        } else {
-          _capturedFiles
-            ..clear()
-            ..add(picked.first);
-        }
-        _currentPageIndex = _capturedFiles.isEmpty
-            ? 0
-            : _capturedFiles.length - 1;
-      });
-
-      debugPrint('Gallery images count: ${picked.length}');
-    } catch (e) {
-      debugPrint('Gallery pick error: $e');
-    }
-  }
-
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initCamera();
+  // }
+  //
+  // Future<void> _initCamera() async {
+  //   try {
+  //     final cameras = await availableCameras();
+  //
+  //     final backCamera = cameras.firstWhere(
+  //           (c) => c.lensDirection == CameraLensDirection.back,
+  //       orElse: () => cameras.first,
+  //     );
+  //
+  //     _cameraController = CameraController(
+  //       backCamera,
+  //       ResolutionPreset.high,
+  //       enableAudio: false,
+  //     );
+  //
+  //     _initializeControllerFuture = _cameraController!.initialize();
+  //     await _initializeControllerFuture;
+  //
+  //     if (!mounted) return;
+  //
+  //     setState(() {
+  //       _isCameraReady = true;
+  //     });
+  //   } catch (e) {
+  //     debugPrint('Camera init error: $e');
+  //     if (!mounted) return;
+  //     setState(() {
+  //       _isCameraReady = false;
+  //     });
+  //   }
+  // }
+  //
+  // Future<void> _captureImage() async {
+  //   if (_cameraController == null ||
+  //       !_cameraController!.value.isInitialized ||
+  //       _cameraController!.value.isTakingPicture) {
+  //     return;
+  //   }
+  //
+  //   try {
+  //     await _initializeControllerFuture;
+  //     final file = await _cameraController!.takePicture();
+  //
+  //     setState(() {
+  //       if (_isMultiPage) {
+  //         _capturedFiles.add(file);
+  //       } else {
+  //         _capturedFiles
+  //           ..clear()
+  //           ..add(file);
+  //       }
+  //       _currentPageIndex = _capturedFiles.isEmpty
+  //           ? 0
+  //           : _capturedFiles.length - 1; // last page
+  //     });
+  //
+  //     debugPrint('Captured image path: ${file.path}');
+  //   } catch (e) {
+  //     debugPrint('Capture error: $e');
+  //   }
+  // }
+  //
+  // Future<void> _pickFromGallery() async {
+  //   try {
+  //     final picked = await _picker.pickMultiImage(); // multiple image
+  //     if (picked.isEmpty) return;
+  //
+  //     setState(() {
+  //       if (_isMultiPage) {
+  //         _capturedFiles.addAll(picked);
+  //       } else {
+  //         _capturedFiles
+  //           ..clear()
+  //           ..add(picked.first);
+  //       }
+  //       _currentPageIndex = _capturedFiles.isEmpty
+  //           ? 0
+  //           : _capturedFiles.length - 1;
+  //     });
+  //
+  //     debugPrint('Gallery images count: ${picked.length}');
+  //   } catch (e) {
+  //     debugPrint('Gallery pick error: $e');
+  //   }
+  // }
+  //
   String get _pageCounterText {
     if (_capturedFiles.isEmpty) return '0/0';
     return '${_currentPageIndex + 1}/${_capturedFiles.length}';
@@ -164,9 +166,9 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       // TODO: flash toggle (torch control)
                     },
-                    iconSize: 22.sp, // optional
+                    iconSize: 22.sp,
                     icon: SvgPicture.asset(
-                      'assets/images/crop.svg',      // তোমার flash icon path
+                      'assets/images/crop.svg',
                       width: 22.w,
                       height: 22.w,
                       colorFilter: const ColorFilter.mode(
@@ -179,9 +181,9 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () {
                       // TODO: front/back switch
                     },
-                    iconSize: 22.sp, // optional
+                    iconSize: 22.sp,
                     icon: SvgPicture.asset(
-                      'assets/images/hq.svg', // তোমার camera switch icon path
+                      'assets/images/hq.svg',
                       width: 22.w,
                       height: 22.w,
                       colorFilter: const ColorFilter.mode(
@@ -214,41 +216,43 @@ class _CameraScreenState extends State<CameraScreen> {
             // CAMERA PREVIEW AREA
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding:  EdgeInsets.only(bottom: 10.h,),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(20.r),
+                    //  borderRadius: BorderRadius.circular(20.r),
                       child: AspectRatio(
                         aspectRatio: 3 / 4,
-                        child: _isCameraReady && _cameraController != null
-                            ? CameraPreview(_cameraController!)
-                            : Container(
-                          color: Colors.grey.shade900,
-                          child: Center(
-                            child: _cameraController == null
-                                ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                                : const Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.white54,
-                              size: 40,
-                            ),
-                          ),
-                        ),
+                        child:
+                          Image.asset("assets/images/camera_image.png", fit: BoxFit.cover,)
+                        // _isCameraReady && _cameraController != null
+                        //     ? CameraPreview(_cameraController!)
+                        //     : Container(
+                        //   color: Colors.grey.shade900,
+                        //   child: Center(
+                        //     child: _cameraController == null
+                        //         ? const CircularProgressIndicator(
+                        //       color: Colors.white,
+                        //     )
+                        //         : const Icon(
+                        //       Icons.camera_alt_outlined,
+                        //       color: AllColor.white24,
+                        //       size: 40,
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                     ),
 
                     // Single / Multi page pill
                     Positioned(
-                      bottom: 60.h,
+                      bottom: 40.h,
                       child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 14.w, vertical: 6.h),
+                        // padding: EdgeInsets.symmetric(
+                        //     horizontal: 14.w, vertical: 6.h),
                         decoration: BoxDecoration(
-                          color: AllColor.gery,
+                          color: AllColor.gery100,
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Row(
@@ -287,9 +291,10 @@ class _CameraScreenState extends State<CameraScreen> {
 
                     // Mode tabs bottom
                     Positioned(
-                      bottom: 16.h,
+                      bottom: 0.h,
                       left: 0,
                       right: 0,
+
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: List.generate(
@@ -322,18 +327,21 @@ class _CameraScreenState extends State<CameraScreen> {
                 children: [
                   // Gallery button
                   InkWell(
-                    onTap: _pickFromGallery,
-                    borderRadius: BorderRadius.circular(12.r),
+                    //onTap: _pickFromGallery,
+                    onTap: (){
+                      context.push(EditFilterScreen.routeName);
+                    },
+                  //  borderRadius: BorderRadius.circular(12.r),
                     child: Container(
-                      padding: EdgeInsets.all(10.r),
+                    //  padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
-                        color: Colors.white10,
+                     //   color: Colors.white10,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: SvgPicture.asset(
                         'assets/images/add_photo.svg',
-                        height: 24.h,
-                        width: 24.w,
+                        height: 48.h,
+                        width: 48.w,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -341,7 +349,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
                   // Capture button
                   GestureDetector(
-                    onTap: _captureImage,
+                 //   onTap: _captureImage,
                     child: Container(
                       width: 76.w,
                       height: 76.w,
@@ -361,42 +369,48 @@ class _CameraScreenState extends State<CameraScreen> {
                       ),
                     ),
                   ),
+                        Center(
+    child: ImageWithBadge(
+    imagePath: 'assets/images/camera_image.png',
+    count: 1,
+    ),
+    ),
 
                   // Page count / layers
-                  InkWell(
-                    onTap: () {
-                      // TODO: open captured pages list / preview
-                    },
-                    borderRadius: BorderRadius.circular(12.r),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 8.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.layers_outlined,
-                            color: Colors.white,
-                            size: 18.sp,
-                          ),
-                          SizedBox(width: 6.w),
-                          Text(
-                            _pageCounterText, // <-- dynamic count
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.sp,
-                              fontFamily: 'sf_Pro',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     // TODO: open captured pages list / preview
+                  //   },
+                  //   borderRadius: BorderRadius.circular(12.r),
+                  //   child: Container(
+                  //     padding: EdgeInsets.symmetric(
+                  //       horizontal: 10.w,
+                  //       vertical: 8.h,
+                  //     ),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white10,
+                  //       borderRadius: BorderRadius.circular(12.r),
+                  //     ),
+                  //     child: Row(
+                  //       children: [
+                  //         Icon(
+                  //           Icons.layers_outlined,
+                  //           color: Colors.white,
+                  //           size: 18.sp,
+                  //         ),
+                  //         SizedBox(width: 6.w),
+                  //         Text(
+                  //           _pageCounterText, // <-- dynamic count
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //             fontSize: 13.sp,
+                  //             fontFamily: 'sf_Pro',
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -418,7 +432,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: selected ? AllColor.primary : AllColor.gery,
+          color: selected ? AllColor.primary : AllColor.gery100,
           borderRadius: BorderRadius.circular(12.r),
 
         ),
@@ -471,6 +485,73 @@ class _ModeTab extends StatelessWidget {
             decoration: BoxDecoration(
               color: selected ? AllColor.white :AllColor.black,
               borderRadius: BorderRadius.circular(2.r),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+class ImageWithBadge extends StatelessWidget {
+  final String imagePath; // asset path
+  final int count;
+
+  const ImageWithBadge({
+    Key? key,
+    required this.imagePath,
+    required this.count,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 44.w,
+      height: 55.h,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.center,
+        children: [
+          // main image (rounded)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(11.r),
+            child: Image.asset(
+              imagePath,
+              width: 44.w,
+              height: 55.h,
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // red badge bottom-center
+          Positioned(
+            bottom: 0.h,
+            left: -10.h,
+            top: 0,
+            child: Center(
+              child: Container(
+                width: 24.w,
+                height: 24.w,
+                decoration:  BoxDecoration(
+                  color: AllColor.red,
+                  borderRadius: BorderRadius.all(Radius.circular(100.r))
+                 
+                ),
+                child: Center(
+                  child: Text(
+                    '$count',
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                      fontFamily: "sf_Pro"
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],
