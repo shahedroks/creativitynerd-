@@ -12,6 +12,9 @@ class AllColor {
   static const Color popupcolor = Color(0xFF707070);
   static const Color toolsColor = Color(0xFF161717);
   static const Color iconColor = Color(0xFF999999);
+  static const Color qrColor = Color(0xFF161717);
+  static const Color borderColor = Color(0xFF808080);
+
 
   static const Color toolsColor1 = Color(0xFF0074D2);
   static const Color toolsColor2 = Color(0xFF65A304);
