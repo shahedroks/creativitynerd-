@@ -11,10 +11,6 @@ class ToolsScreen extends StatefulWidget {
 class _ToolsScreenState extends State<ToolsScreen> {
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Center(
-        child:Text("Tools"),
-      ),
-    );
+    return Scaffold(body: Center(child: Text("Tools")));
   }
 }
