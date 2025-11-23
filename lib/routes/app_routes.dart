@@ -4,6 +4,7 @@ import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart'
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
@@ -99,6 +100,12 @@ class AppRouter {
         builder: (context, state) => const DocumentPreviewScreen(),
       ),
 
+
+      GoRoute(
+        path: PhotoScan.routeName,
+        name: PhotoScan.routeName,
+        builder: (context, state) => const PhotoScan(),
+      ),
 
 
       GoRoute(
