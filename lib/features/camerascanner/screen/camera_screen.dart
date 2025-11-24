@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/onbording/widget/CustomButton.dart';
 import 'package:pdf_scanner/features/tools/screen/auto_crop_screen.dart';

@@ -181,13 +181,13 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _BottomToolButton(
-                            onTap: (){},
+
                             svgPath: 'assets/images/retake_icon.svg',
                             label: 'Retake',
                             onTap: () {},
                           ),
                           _BottomToolButton(
-                            onTap: (){},
+
                             svgPath: 'assets/images/signature.svg',
                             label: 'Signature',
                             onTap: () {
@@ -196,32 +196,29 @@ class _CropSaveScreenState extends State<CropSaveScreen> {
                           ),
                           _BottomToolButton(
                             onTap: () async {
-                              final text = await context.push<String>(WatermarkScreen.routeName);
-                              if (text != null && text.isNotEmpty) {
-                                debugPrint("Watermark Text: $text");
-                              }
+                               context.push(WatermarkScreen.routeName);
                             },
                             svgPath: 'assets/images/watermark.svg',
                             label: 'Watermark',
-                            onTap: () {},
+
                           ),
                           _BottomToolButton(
                             onTap: (){},
                             svgPath: 'assets/images/add_text.svg',
                             label: 'Add text',
-                            onTap: () {},
+
                           ),
                           _BottomToolButton(
                             onTap: (){},
                             svgPath: 'assets/images/highlight.svg',
                             label: 'Highlight',
-                            onTap: () {},
+
                           ),
                           _BottomToolButton(
                             onTap: (){},
                             svgPath: 'assets/images/filter.svg',
                             label: 'Filter',
-                            onTap: () {},
+
                           ),
                         ],
                       ),
@@ -272,8 +269,6 @@ class _BottomToolButton extends StatelessWidget {
 
   final VoidCallback? onTap;
 
-
-  final VoidCallback onTap;
 
 
   const _BottomToolButton({
