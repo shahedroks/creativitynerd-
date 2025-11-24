@@ -4,6 +4,8 @@ import 'package:pdf_scanner/features/camerascanner/screen/crop_save_screen.dart'
 import 'package:pdf_scanner/features/camerascanner/screen/crop_screen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/documentPreviewScreen.dart';
 import 'package:pdf_scanner/features/camerascanner/screen/edit_filter_screen.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/orc_extrect.dart';
+import 'package:pdf_scanner/features/camerascanner/screen/photo_scan.dart';
 import 'package:pdf_scanner/features/files/screen/files_screen.dart';
 import 'package:pdf_scanner/features/home/screen/home_screen.dart';
 import 'package:pdf_scanner/features/onbording/screens/onboardingScreen.dart';
@@ -81,12 +83,20 @@ class AppRouter {
         name: EditFilterScreen.routeName,
         builder: (context, state) => const EditFilterScreen(),
       ),
-
       GoRoute(
         path: CropScreen.routeName,
         name: CropScreen.routeName,
         builder: (context, state) => const CropScreen(),
       ),
+
+      GoRoute(
+        path: OrcExtrect.routeName,
+        name: OrcExtrect.routeName,
+        builder: (context, state) => const OrcExtrect(),
+      ),
+
+
+
       GoRoute(
         path: CropSaveScreen.routeName,
         name: CropSaveScreen.routeName,
@@ -97,6 +107,14 @@ class AppRouter {
         path: DocumentPreviewScreen.routeName,
         name: DocumentPreviewScreen.routeName,
         builder: (context, state) => const DocumentPreviewScreen(),
+      ),
+
+
+
+      GoRoute(
+        path: PhotoScan.routeName,
+        name: PhotoScan.routeName,
+        builder: (context, state) => const PhotoScan(),
       ),
 
       GoRoute(
