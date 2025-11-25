@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import '../../onbording/screens/onboardingScreen.dart';
 import 'package:pdf_scanner/core/constants/color_control/all_color.dart';
+
+import '../../onbording/screens/onboardingScreen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -21,16 +22,13 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // 5 sec e 0 → 1
+    // 🔹 4 sec e 0 → 1
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 4),
     );
 
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.linear,
-    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
 
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
@@ -38,7 +36,6 @@ class _SplashScreenState extends State<SplashScreen>
       }
     });
 
-    // Start animation
     _controller.forward();
   }
 
@@ -91,17 +88,6 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
                 const Spacer(),
-                //
-                // AnimatedBuilder(
-                //   animation: _animation,
-                //   builder: (context, child) {
-                //     return SimpleProgressBar(
-                //       progress: _animation.value, // 0.0 .. 1.0
-                //       height: 6.h,
-                //       horizontalInset: 50.w,
-                //     );
-                //   },
-                // ),
 
                 AnimatedBuilder(
                   animation: _animation,
@@ -109,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen>
                     return SimpleProgressBar(
                       progress: _animation.value, // 0.0 .. 1.0
                       height: 6.h,
-                      horizontalInset: 50.w,
+                      horizontalInset: 10.w,
                     );
                   },
                 ),
@@ -123,11 +109,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-
-
 class SimpleProgressBar extends StatelessWidget {
-  /// 0.0 .. 1.0 -> segment er position
-  final double progress;
+  final double progress; // 0.0 .. 1.0 (controller value)
   final double height;
   final double horizontalInset;
   final Color trackColor;
@@ -137,40 +120,52 @@ class SimpleProgressBar extends StatelessWidget {
     super.key,
     required this.progress,
     this.height = 4,
-    this.horizontalInset = 30,
-    this.trackColor = AllColor.white, // jei color chao use korte paro
+    this.horizontalInset = 10,
+    this.trackColor = AllColor.white,
     this.fillColor = AllColor.primary,
   });
 
   @override
   Widget build(BuildContext context) {
+    // controller value clamp (0.0 .. 1.0)
+    final double t = progress.clamp(0.0, 1.0).toDouble();
 
-    final double p = progress.clamp(0.1, 1.0).toDouble();
+    // ----- left↔right multiple times -----
+    // kotobar full cycle (left→right→left) hobe
+    const int cycles = 3; // chaile 4 o dite paro
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final double trackW = constraints.maxWidth;
+    final double total = t * cycles; // 0..cycles
+    final int segment = total.floor(); // 0,1,2,...
+    final double tCycle = total - segment; // 0..1 (current cycle position)
+    final bool forward = segment.isEven; // even: left→right, odd: right→left
 
-        final double innerW =
-        (trackW - horizontalInset * 2).clamp(0.0, double.infinity);
+    // p: 0 = left, 1 = right
+    final double p = forward ? tCycle : (1.0 - tCycle);
 
-        // segment total width er 50%
-        const double segmentFraction = 0.60;
-        final double segmentW = innerW * segmentFraction;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final double trackW = constraints.maxWidth;
 
+          // puro width use korbo
+          final double innerW = trackW;
 
-        final double maxOffset = innerW - segmentW;
-        final double offset = maxOffset * p;
+          // segment total width er 60%
+          const double segmentFraction = 0.60;
+          final double segmentW = innerW * segmentFraction;
 
-        return Container(
-          height: height,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: trackColor,
-            borderRadius: BorderRadius.circular(height / 1),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: horizontalInset),
+          // সর্বোচ্চ offset (একদম ডান প্রান্ত)
+          final double maxOffset = innerW - segmentW;
+          final double offset = maxOffset * p;
+
+          return Container(
+            height: height,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: trackColor,
+              borderRadius: BorderRadius.circular(height),
+            ),
             child: Stack(
               children: [
                 Positioned(
@@ -181,15 +176,15 @@ class SimpleProgressBar extends StatelessWidget {
                     width: segmentW,
                     decoration: BoxDecoration(
                       color: fillColor,
-                      borderRadius: BorderRadius.circular(height / 1),
+                      borderRadius: BorderRadius.circular(height),
                     ),
                   ),
                 ),
               ],
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
